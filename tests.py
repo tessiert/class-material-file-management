@@ -255,3 +255,32 @@ def test_create_new_todo_with_existing_todos(todos_with_categories):
             'status': 'pending'
         }]
     }
+
+
+def test_mark_todo_as_complete(todos_with_categories):
+    manager = TodoManager(TESTING_PATH)
+    manager.complete(
+        'Practice Pathlib',
+        category='programming'
+        )
+
+    general_todos_path = todos_with_categories / 'programming.json'
+
+    assert general_todos_path.exists()
+    with general_todos_path.open('r') as fp:
+        todos = json.load(fp)
+
+    assert todos == {
+        'category_name': 'Programming',
+        'todos': [{
+            'task': 'Practice Pathlib',
+            'description': 'Investigate Pathlib and file creation',
+            'due_on': '2018-03-25',
+            'status': 'done'    # Status should be changed from pending to done
+        }, {
+            'task': 'Finish rmotrgram',
+            'description': 'Finish before class to start reviewing',
+            'due_on': '2018-03-21',
+            'status': 'done'
+        }]
+    }
